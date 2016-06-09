@@ -1,61 +1,71 @@
 package com.teamdev.javaclasses.brainfuck;
 
-import java.util.Arrays;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
 
 public class BrainfuckInterpreter implements Interpreter {
 
     private final int MEMORY_SIZE = 10;
-    private int[] outputArray = null;
+    private int[] memory = null;
 
     public BrainfuckInterpreter() {
     }
 
-    public int[] getOutputArray() {
-        return outputArray;
+    public int[] getMemory() {
+        return memory;
     }
 
     @Override
-    public String interpret(String inputText) {
+    public String execute(String inputText) {
 
         final char[] inputTextCharArr = inputText.toCharArray();
-        outputArray = new int[MEMORY_SIZE];
+        memory = new int[MEMORY_SIZE];
 
+        final int openBracesNumber = StringUtils.countMatches(inputText, '[');
+        final int closeBracesNumber = StringUtils.countMatches(inputText, ']');
+
+        if (openBracesNumber != closeBracesNumber) {
+            throw new IllegalArgumentException("Given text is not correct: number of opened and closed braces does not match!");
+        }
+
+        Deque<Integer> openBracesIndexesKeeper = new ArrayDeque<>();
         StringBuilder interpretedString = new StringBuilder();
-        int arrayIndex = 0;
+        int pointer = 0;
 
         for (int i = 0; i < inputTextCharArr.length; i++) {
 
-            if (arrayIndex == outputArray.length) {
+            if (pointer == memory.length) {
 
-                int newMemorySize = arrayIndex * 2;
-                outputArray = Arrays.copyOf(outputArray, newMemorySize);
+                int newMemorySize = pointer * 2;
+                memory = Arrays.copyOf(memory, newMemorySize);
 
             }
 
             switch (inputTextCharArr[i]) {
 
                 case '+': {
-                    outputArray[arrayIndex] += 1;
+                    memory[pointer] += 1;
                     break;
                 }
 
                 case '-': {
-                    outputArray[arrayIndex] -= 1;
+                    memory[pointer] -= 1;
                     break;
                 }
 
                 case '>': {
-                    ++arrayIndex;
+                    ++pointer;
                     break;
                 }
 
                 case '<': {
-                    --arrayIndex;
+                    --pointer;
                     break;
                 }
 
                 case '.': {
-                    interpretedString.append(Character.toChars(outputArray[arrayIndex]));
+                    interpretedString.append(Character.toChars(memory[pointer]));
                     break;
                 }
 
@@ -63,7 +73,9 @@ public class BrainfuckInterpreter implements Interpreter {
 
                     int loopCounter = 1;
 
-                    if (outputArray[arrayIndex] == 0) {
+                    openBracesIndexesKeeper.addLast(i);
+
+                    if (memory[pointer] == 0) {
 
                         while (loopCounter > 0) {
 
@@ -90,27 +102,13 @@ public class BrainfuckInterpreter implements Interpreter {
 
                 case ']': {
 
-                    int loopCounter = 1;
+                    if (memory[pointer] != 0) {
 
-                    if (outputArray[arrayIndex] != 0) {
+                        i = openBracesIndexesKeeper.getLast();
 
-                        while (loopCounter > 0) {
+                    } else {
 
-                            i--;
-
-                            if (inputTextCharArr[i] == '[') {
-
-                                loopCounter--;
-
-                            }
-
-                            if (inputTextCharArr[i] == ']') {
-
-                                loopCounter++;
-
-                            }
-
-                        }
+                        openBracesIndexesKeeper.removeLast();
 
                     }
 
@@ -119,7 +117,7 @@ public class BrainfuckInterpreter implements Interpreter {
 
                 default: {
 
-                    throw new IllegalArgumentException("Such command isn\'t allowed in Brainfuck language!");
+                    throw new IllegalArgumentException("Such command is not allowed in Brainfuck language!");
 
                 }
 
