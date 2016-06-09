@@ -6,7 +6,8 @@ public class BrainfuckInterpreter implements Interpreter {
 
     private final int MEMORY_SIZE = 10;
 
-    public BrainfuckInterpreter() {}
+    public BrainfuckInterpreter() {
+    }
 
     @Override
     public String interpret(String inputText) {
@@ -26,87 +27,94 @@ public class BrainfuckInterpreter implements Interpreter {
 
             }
 
-            if (inputTextCharArr[i] == '+') {
+            switch (inputTextCharArr[i]) {
 
-                array[arrayIndex] += 1;
-
-            }
-
-            if (inputTextCharArr[i] == '-') {
-
-                array[arrayIndex] -= 1;
-
-            }
-
-            if (inputTextCharArr[i] == '>') {
-
-                ++arrayIndex;
-
-            }
-
-            if (inputTextCharArr[i] == '<') {
-
-                --arrayIndex;
-
-            }
-
-            if (inputTextCharArr[i] == '.') {
-
-                finalString.append(Character.toChars(array[arrayIndex]));
-
-            }
-
-            if (inputTextCharArr[i] == '[') {
-
-                int loopCounter = 1;
-
-                if (array[arrayIndex] == 0) {
-
-                    while (loopCounter > 0) {
-
-                        i++;
-
-                        if (inputTextCharArr[i] == '[') {
-
-                            loopCounter++;
-
-                        }
-
-                        if (inputTextCharArr[i] == ']') {
-
-                            loopCounter--;
-
-                        }
-
-                    }
-
+                case '+': {
+                    array[arrayIndex] += 1;
+                    break;
                 }
 
-            }
+                case '-': {
+                    array[arrayIndex] -= 1;
+                    break;
+                }
 
-            if (inputTextCharArr[i] == ']') {
+                case '>': {
+                    ++arrayIndex;
+                    break;
+                }
 
-                int loopCounter = 1;
+                case '<': {
+                    --arrayIndex;
+                    break;
+                }
 
-                if (array[arrayIndex] != 0) {
+                case '.': {
+                    finalString.append(Character.toChars(array[arrayIndex]));
+                    break;
+                }
 
-                    while (loopCounter > 0) {
+                case '[': {
 
-                        i--;
+                    int loopCounter = 1;
 
-                        if (inputTextCharArr[i] == '[') {
+                    if (array[arrayIndex] == 0) {
 
-                            loopCounter--;
+                        while (loopCounter > 0) {
 
-                        }
+                            i++;
 
-                        if (inputTextCharArr[i] == ']') {
+                            if (inputTextCharArr[i] == '[') {
 
-                            loopCounter++;
+                                loopCounter++;
+
+                            }
+
+                            if (inputTextCharArr[i] == ']') {
+
+                                loopCounter--;
+
+                            }
 
                         }
 
                     }
+
+                    break;
+                }
+
+                case ']': {
+
+                    int loopCounter = 1;
+
+                    if (array[arrayIndex] != 0) {
+
+                        while (loopCounter > 0) {
+
+                            i--;
+
+                            if (inputTextCharArr[i] == '[') {
+
+                                loopCounter--;
+
+                            }
+
+                            if (inputTextCharArr[i] == ']') {
+
+                                loopCounter++;
+
+                            }
+
+                        }
+
+                    }
+
+                    break;
+                }
+
+                default: {
+
+                    throw new IllegalArgumentException("");
 
                 }
 

@@ -35,4 +35,9 @@ public class BrainfuckInterpreterTest {
         assertEquals("Back command doesn't execute", "<", interpreter.interpret("<"));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testIllegalSymbol() {
+        interpreter.interpret("1");
+    }
+
 }
