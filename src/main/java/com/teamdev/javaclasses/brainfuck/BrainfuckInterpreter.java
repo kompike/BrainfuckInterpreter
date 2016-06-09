@@ -5,37 +5,42 @@ import java.util.Arrays;
 public class BrainfuckInterpreter implements Interpreter {
 
     private final int MEMORY_SIZE = 10;
+    private int[] outputArray = null;
 
     public BrainfuckInterpreter() {
+    }
+
+    public int[] getOutputArray() {
+        return outputArray;
     }
 
     @Override
     public String interpret(String inputText) {
 
         final char[] inputTextCharArr = inputText.toCharArray();
-        int[] array = new int[MEMORY_SIZE];
+        outputArray = new int[MEMORY_SIZE];
 
-        StringBuilder finalString = new StringBuilder();
+        StringBuilder interpretedString = new StringBuilder();
         int arrayIndex = 0;
 
         for (int i = 0; i < inputTextCharArr.length; i++) {
 
-            if (arrayIndex == array.length) {
+            if (arrayIndex == outputArray.length) {
 
                 int newMemorySize = arrayIndex * 2;
-                array = Arrays.copyOf(array, newMemorySize);
+                outputArray = Arrays.copyOf(outputArray, newMemorySize);
 
             }
 
             switch (inputTextCharArr[i]) {
 
                 case '+': {
-                    array[arrayIndex] += 1;
+                    outputArray[arrayIndex] += 1;
                     break;
                 }
 
                 case '-': {
-                    array[arrayIndex] -= 1;
+                    outputArray[arrayIndex] -= 1;
                     break;
                 }
 
@@ -50,7 +55,7 @@ public class BrainfuckInterpreter implements Interpreter {
                 }
 
                 case '.': {
-                    finalString.append(Character.toChars(array[arrayIndex]));
+                    interpretedString.append(Character.toChars(outputArray[arrayIndex]));
                     break;
                 }
 
@@ -58,7 +63,7 @@ public class BrainfuckInterpreter implements Interpreter {
 
                     int loopCounter = 1;
 
-                    if (array[arrayIndex] == 0) {
+                    if (outputArray[arrayIndex] == 0) {
 
                         while (loopCounter > 0) {
 
@@ -87,7 +92,7 @@ public class BrainfuckInterpreter implements Interpreter {
 
                     int loopCounter = 1;
 
-                    if (array[arrayIndex] != 0) {
+                    if (outputArray[arrayIndex] != 0) {
 
                         while (loopCounter > 0) {
 
@@ -114,7 +119,7 @@ public class BrainfuckInterpreter implements Interpreter {
 
                 default: {
 
-                    throw new IllegalArgumentException("");
+                    throw new IllegalArgumentException("Such command isn\'t allowed in Brainfuck language!");
 
                 }
 
@@ -122,7 +127,7 @@ public class BrainfuckInterpreter implements Interpreter {
 
         }
 
-        return finalString.toString();
+        return interpretedString.toString();
 
     }
 

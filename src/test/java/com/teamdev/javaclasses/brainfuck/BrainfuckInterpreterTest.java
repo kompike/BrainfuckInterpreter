@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 
 public class BrainfuckInterpreterTest {
 
-    private Interpreter interpreter = new BrainfuckInterpreter();
+    private BrainfuckInterpreter interpreter = new BrainfuckInterpreter();
     private final String HELLO_WORLD = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---" +
             ".+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
 
@@ -28,6 +28,31 @@ public class BrainfuckInterpreterTest {
     @Test(expected = IllegalArgumentException.class)
     public void testIllegalSymbol() {
         interpreter.interpret("1");
+    }
+
+    @Test
+    public void testPlusCommand() {
+        interpreter.interpret("+");
+        assertTrue("", interpreter.getOutputArray()[0] == 1);
+    }
+
+    @Test
+    public void testMinusCommand() {
+        interpreter.interpret("+++-");
+        assertTrue("", interpreter.getOutputArray()[0] == 2);
+    }
+
+    @Test
+    public void testForwardCommand() {
+        interpreter.interpret(">+++");
+        assertTrue("", interpreter.getOutputArray()[1] == 3);
+    }
+
+
+    @Test
+    public void testBackCommand() {
+        interpreter.interpret(">>++<");
+        assertTrue("", interpreter.getOutputArray()[1] == 0);
     }
 
 }
