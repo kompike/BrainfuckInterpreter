@@ -12,7 +12,7 @@ public class BrainfuckInterpreterTest {
 
     @Test
     public void testHelloWorld() {
-        assertEquals("Obtained value doesn\'t equals \'Hello world!\'", "Hello world!", interpreter.interpret(helloWorld));
+        assertEquals("Obtained value doesn\'t equals \'Hello World!\'", "Hello World!\n", interpreter.interpret(helloWorld));
     }
 
     @Test
@@ -27,12 +27,12 @@ public class BrainfuckInterpreterTest {
 
     @Test
     public void testForwardCommand() {
-        assertEquals("Forward command doesn't execute", "Hello world!", interpreter.interpret(">"));
+        assertEquals("Forward command doesn't execute", ">", interpreter.interpret(">"));
     }
 
     @Test
     public void testBackCommand() {
-        assertEquals("Back command doesn't execute", "Hello world!", interpreter.interpret("<"));
+        assertEquals("Back command doesn't execute", "<", interpreter.interpret("<"));
     }
 
 }
