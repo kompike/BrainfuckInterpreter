@@ -22,7 +22,7 @@ public class BrainfuckInterpreterTest {
 
     @Test
     public void testPrintCommand() {
-        assertEquals("Obtained value's length doesn\'t equals 1", 1, interpreter.interpret("++++++++[>++++++++<-]>+.").length());
+        assertEquals("Obtained value's length doesn\'t equals 1", 2, interpreter.interpret("..").length());
     }
 
     @Test(expected = IllegalArgumentException.class)
