@@ -22,7 +22,7 @@ public class BrainfuckInterpreterTest {
 
     @Test
     public void testPrintCommand() {
-        assertEquals("Obtained value's length doesn\'t equals 2", 2, interpreter.interpret("..").length());
+        assertEquals("Print command doesn't work properly!", 2, interpreter.interpret("..").length());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -33,26 +33,26 @@ public class BrainfuckInterpreterTest {
     @Test
     public void testPlusCommand() {
         interpreter.interpret("+");
-        assertTrue("", interpreter.getOutputArray()[0] == 1);
+        assertTrue("Increment command doesn\'t work properly!", interpreter.getOutputArray()[0] == 1);
     }
 
     @Test
     public void testMinusCommand() {
         interpreter.interpret("+++-");
-        assertTrue("", interpreter.getOutputArray()[0] == 2);
+        assertTrue("Decrement command doesn't work properly!", interpreter.getOutputArray()[0] == 2);
     }
 
     @Test
     public void testForwardCommand() {
         interpreter.interpret(">+++");
-        assertTrue("", interpreter.getOutputArray()[1] == 3);
+        assertTrue("Forward command doesn't work properly!", interpreter.getOutputArray()[1] == 3);
     }
 
 
     @Test
     public void testBackCommand() {
         interpreter.interpret(">>++<");
-        assertTrue("", interpreter.getOutputArray()[1] == 0);
+        assertTrue("Back command doesn't work properly!", interpreter.getOutputArray()[1] == 0);
     }
 
 }
