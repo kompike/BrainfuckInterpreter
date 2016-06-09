@@ -112,8 +112,6 @@ public class BrainfuckInterpreter implements Interpreter {
 
                         }
 
-                        i--;
-
                     }
 
                     break;
