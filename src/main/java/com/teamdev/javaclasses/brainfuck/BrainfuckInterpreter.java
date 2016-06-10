@@ -6,7 +6,6 @@ import java.util.*;
 
 public class BrainfuckInterpreter implements Interpreter {
 
-    private final int MEMORY_SIZE = 10;
     private int[] memory = null;
 
     public BrainfuckInterpreter() {
@@ -20,7 +19,8 @@ public class BrainfuckInterpreter implements Interpreter {
     public String execute(String inputText) {
 
         final char[] inputTextCharArr = inputText.toCharArray();
-        memory = new int[MEMORY_SIZE];
+        int memorySize = 10;
+        memory = new int[memorySize];
 
         final int openBracesNumber = StringUtils.countMatches(inputText, '[');
         final int closeBracesNumber = StringUtils.countMatches(inputText, ']');
