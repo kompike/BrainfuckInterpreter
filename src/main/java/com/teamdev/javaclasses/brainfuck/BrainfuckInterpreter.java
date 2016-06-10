@@ -1,71 +1,48 @@
 package com.teamdev.javaclasses.brainfuck;
 
-import org.apache.commons.lang3.StringUtils;
-
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 
 public class BrainfuckInterpreter implements Interpreter {
 
-    private int[] memory = null;
-
-    public BrainfuckInterpreter() {
-    }
-
-    public int[] getMemory() {
-        return memory;
-    }
-
     @Override
-    public String execute(String inputText) {
+    public String execute(String inputText, Memory memory, OutputStream outputStream) {
 
         final char[] inputTextCharArr = inputText.toCharArray();
-        int memorySize = 10;
-        memory = new int[memorySize];
 
-        final int openBracesNumber = StringUtils.countMatches(inputText, '[');
-        final int closeBracesNumber = StringUtils.countMatches(inputText, ']');
-
-        if (openBracesNumber != closeBracesNumber) {
-            throw new IllegalArgumentException("Given text is not correct: number of opened and closed braces does not match!");
-        }
-
-        Deque<Integer> openBracesIndexesKeeper = new ArrayDeque<>();
-        StringBuilder interpretedString = new StringBuilder();
-        int pointer = 0;
+        final Deque<Integer> cyclesDeque = new ArrayDeque<>();
 
         for (int i = 0; i < inputTextCharArr.length; i++) {
-
-            if (pointer == memory.length) {
-
-                int newMemorySize = pointer * 2;
-                memory = Arrays.copyOf(memory, newMemorySize);
-
-            }
 
             switch (inputTextCharArr[i]) {
 
                 case '+': {
-                    memory[pointer] += 1;
+                    memory.incrementCellValue();
                     break;
                 }
 
                 case '-': {
-                    memory[pointer] -= 1;
+                    memory.decrementCellValue();
                     break;
                 }
 
                 case '>': {
-                    ++pointer;
+                    memory.movePointerToRight();
                     break;
                 }
 
                 case '<': {
-                    --pointer;
+                    memory.movePointerToLeft();
                     break;
                 }
 
                 case '.': {
-                    interpretedString.append(Character.toChars(memory[pointer]));
+                    try {
+                        outputStream.write((char) memory.getCurrentCellValue());
+                    } catch (IOException e) {
+                        throw new IllegalStateException(e);
+                    }
                     break;
                 }
 
@@ -73,9 +50,9 @@ public class BrainfuckInterpreter implements Interpreter {
 
                     int loopCounter = 1;
 
-                    openBracesIndexesKeeper.addLast(i);
+                    cyclesDeque.addLast(i);
 
-                    if (memory[pointer] == 0) {
+                    if (memory.getCurrentCellValue() == 0) {
 
                         while (loopCounter > 0) {
 
@@ -102,13 +79,18 @@ public class BrainfuckInterpreter implements Interpreter {
 
                 case ']': {
 
-                    if (memory[pointer] != 0) {
+                    if (cyclesDeque.isEmpty()) {
+                        throw new IllegalArgumentException("Given text is not correct: " +
+                                "number of opened and closed braces does not match!");
+                    }
 
-                        i = openBracesIndexesKeeper.getLast();
+                    if (memory.getCurrentCellValue() != 0) {
+
+                        i = cyclesDeque.getLast();
 
                     } else {
 
-                        openBracesIndexesKeeper.removeLast();
+                        cyclesDeque.removeLast();
 
                     }
 
@@ -125,7 +107,14 @@ public class BrainfuckInterpreter implements Interpreter {
 
         }
 
-        return interpretedString.toString();
+        if (!cyclesDeque.isEmpty()) {
+            throw new IllegalArgumentException("Given text is not correct: " +
+                    "number of opened and closed braces does not match!");
+        }
+
+
+
+        return outputStream.toString();
 
     }
 
